@@ -9,11 +9,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.world.entity.LivingEntity;
 
-@Mixin(BipedEntityModel.class)
+@Mixin(HumanoidModel.class)
 public class BipedEntityModelMixin {
 
 	@Shadow
@@ -23,20 +23,20 @@ public class BipedEntityModelMixin {
 	public @Final ModelPart leftArm;
 
 	@Inject(
-		method = {"positionRightArm", "positionLeftArm"},
+		method = {"poseRightArm", "poseLeftArm"},
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/render/entity/model/CrossbowPosing;hold(Lnet/minecraft/client/model/ModelPart;Lnet/minecraft/client/model/ModelPart;Lnet/minecraft/client/model/ModelPart;Z)V",
+			target = "Lnet/minecraft/client/model/AnimationUtils;animateCrossbowHold(Lnet/minecraft/client/model/geom/ModelPart;Lnet/minecraft/client/model/geom/ModelPart;Lnet/minecraft/client/model/geom/ModelPart;Z)V",
 			shift = Shift.AFTER
 		),
 		cancellable = true
 	)
 	public void poseArms(LivingEntity entity, CallbackInfo ci) {
-		if(entity.getMainHandStack().getItem() instanceof CuddlyItem || entity.getOffHandStack().getItem() instanceof CuddlyItem) {
-			this.rightArm.pitch = -0.95F;
-			this.rightArm.yaw = (float) (-Math.PI / 8);
-			this.leftArm.pitch = -0.90F;
-			this.leftArm.yaw = (float) (Math.PI / 8);
+		if(entity.getMainHandItem().getItem() instanceof CuddlyItem || entity.getOffhandItem().getItem() instanceof CuddlyItem) {
+			this.rightArm.xRot = -0.95F;
+			this.rightArm.yRot = (float) (-Math.PI / 8);
+			this.leftArm.xRot = -0.90F;
+			this.leftArm.yRot = (float) (Math.PI / 8);
 			ci.cancel();
 		}
 	}

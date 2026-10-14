@@ -1,22 +1,25 @@
 package hibi.blahaj;
 
-import net.minecraft.component.*;
-import net.minecraft.registry.*;
-import net.minecraft.text.*;
-import net.minecraft.util.*;
-
-import java.util.function.*;
+import net.minecraft.core.component.*;
+import net.minecraft.core.registries.*;
+import net.minecraft.network.chat.*;
+import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.registries.*;
 
 public class BlahajDataComponentTypes {
 
-	public static final ComponentType<Text> OWNER = register("owner", (builder) -> builder.codec(TextCodecs.STRINGIFIED_CODEC).packetCodec(TextCodecs.REGISTRY_PACKET_CODEC).cache());
+	/** NeoForge freezes the built-in registries before mod constructors run, so every entry has to go through a DeferredRegister. */
+	public static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, Blahaj.MOD_ID);
 
-	private static <T> ComponentType<T> register(String id, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
-		return Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(Blahaj.MOD_ID, id), builderOperator.apply(ComponentType.builder()).build());
+	public static DataComponentType<Component> OWNER;
+
+	static {
+		// The value is only created (and the field filled in) once NeoForge fires its RegisterEvent.
+		DATA_COMPONENT_TYPES.register("owner", () -> OWNER = DataComponentType.<Component>builder().persistent(ComponentSerialization.FLAT_CODEC).networkSynchronized(ComponentSerialization.STREAM_CODEC).cacheEncoding().build());
 	}
 
-	public static void register() {
-
+	public static void register(IEventBus modEventBus) {
+		DATA_COMPONENT_TYPES.register(modEventBus);
 	}
 
 }

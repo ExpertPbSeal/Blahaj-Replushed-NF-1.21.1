@@ -1,32 +1,33 @@
 package hibi.blahaj.block;
 
 import hibi.blahaj.*;
-import net.minecraft.block.*;
-import net.minecraft.component.*;
-import net.minecraft.component.type.*;
-import net.minecraft.entity.attribute.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.item.*;
-import net.minecraft.item.tooltip.*;
-import net.minecraft.text.*;
-import net.minecraft.util.*;
-import net.minecraft.world.*;
+import net.minecraft.*;
+import net.minecraft.core.component.*;
+import net.minecraft.network.chat.*;
+import net.minecraft.resources.*;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.entity.player.*;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.*;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.block.*;
 import org.jetbrains.annotations.*;
 
 import java.util.*;
 
 public class CuddlyItem extends BlockItem {
 
-	private final Text subtitle;
+	private final Component subtitle;
 
-	public CuddlyItem(Block block, Settings settings, String subtitle) {
+	public CuddlyItem(Block block, Item.Properties settings, String subtitle) {
 		super(block, settings);
-		this.subtitle = subtitle == null ? null : Text.translatable(subtitle).formatted(Formatting.GRAY);
+		this.subtitle = subtitle == null ? null : Component.translatable(subtitle).withStyle(ChatFormatting.GRAY);
 	}
 
 	@Override
-	public void onCraftByPlayer(ItemStack stack, World world, PlayerEntity player) {
-		super.onCraftByPlayer(stack, world, player);
+	public void onCraftedBy(ItemStack stack, Level world, Player player) {
+		super.onCraftedBy(stack, world, player);
 
 		if (player != null) { // compensate for auto-crafter mods
 			stack.set(BlahajDataComponentTypes.OWNER, player.getName());
@@ -34,30 +35,30 @@ public class CuddlyItem extends BlockItem {
 	}
 
 	@Override
-	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-		super.appendTooltip(stack, context, tooltip, type);
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+		super.appendHoverText(stack, context, tooltip, type);
 
 		if (this.subtitle != null) {
 			tooltip.add(this.subtitle);
 		}
 
-		@Nullable Text ownerName = stack.get(BlahajDataComponentTypes.OWNER);
+		@Nullable Component ownerName = stack.get(BlahajDataComponentTypes.OWNER);
 		if (ownerName != null) {
-			@Nullable Text customName = stack.get(DataComponentTypes.CUSTOM_NAME);
+			@Nullable Component customName = stack.get(DataComponents.CUSTOM_NAME);
 			if (customName == null) {
-				tooltip.add(Text.translatable("tooltip.blahaj.owner.craft", ownerName).formatted(Formatting.GRAY));
+				tooltip.add(Component.translatable("tooltip.blahaj.owner.craft", ownerName).withStyle(ChatFormatting.GRAY));
 			} else {
-				tooltip.add(Text.translatable("tooltip.blahaj.owner.rename", customName, ownerName).formatted(Formatting.GRAY));
+				tooltip.add(Component.translatable("tooltip.blahaj.owner.rename", customName, ownerName).withStyle(ChatFormatting.GRAY));
 			}
 		}
 	}
 
-	public static final Identifier MINING_SPEED_MODIFIER_ID = Identifier.of(Blahaj.MOD_ID, "base_attack_damage");
+	public static final ResourceLocation MINING_SPEED_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(Blahaj.MOD_ID, "base_attack_damage");
 
-	public static AttributeModifiersComponent createAttributeModifiers() {
-		return AttributeModifiersComponent.builder()
-			.add(EntityAttributes.PLAYER_BLOCK_BREAK_SPEED, new EntityAttributeModifier(MINING_SPEED_MODIFIER_ID, -3.0, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), AttributeModifierSlot.MAINHAND)
-			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, -2.0, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), AttributeModifierSlot.MAINHAND)
+	public static ItemAttributeModifiers createAttributeModifiers() {
+		return ItemAttributeModifiers.builder()
+			.add(Attributes.BLOCK_BREAK_SPEED, new AttributeModifier(MINING_SPEED_MODIFIER_ID, -3.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), EquipmentSlotGroup.MAINHAND)
+			.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID, -2.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), EquipmentSlotGroup.MAINHAND)
 			.build();
 	}
 

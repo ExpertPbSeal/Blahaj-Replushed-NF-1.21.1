@@ -42,7 +42,7 @@ neoForge {
 }
 
 dependencies {
-
+    // boo~
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
@@ -64,6 +64,8 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
     from "src/main/templates"
     into "build/generated/sources/modMetadata"
 }
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
