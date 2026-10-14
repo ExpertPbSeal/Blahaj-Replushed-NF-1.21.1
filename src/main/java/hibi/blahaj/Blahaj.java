@@ -16,8 +16,7 @@ import net.neoforged.neoforge.event.village.*;
 @SuppressWarnings("null")
 @Mod(Blahaj.MOD_ID)
 public class Blahaj {
-
-	public static final String MOD_ID = "blahaj";
+	public static final String MOD_ID = BlahajConstants.MOD_ID;
 
 	public Blahaj(IEventBus modEventBus) {
 		BlahajDataComponentTypes.register(modEventBus);

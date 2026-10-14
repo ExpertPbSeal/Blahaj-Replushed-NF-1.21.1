@@ -62,10 +62,25 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
     inputs.properties replaceProperties
     expand replaceProperties
     from "src/main/templates"
+    exclude "**/*.java"
     into "build/generated/sources/modMetadata"
 }
 sourceSets.main.resources.srcDir generateModMetadata
 neoForge.ideSyncTask generateModMetadata
+
+// Pass MOD_ID from Gradle to sourcecode
+var generateModConstants = tasks.register("generateModConstants", ProcessResources) {
+    var replaceProperties = [
+            mod_id: mod_id
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from "src/main/templates"
+    include "**/*.java"
+    into "build/generated/sources/modConstants/java"
+}
+sourceSets.main.java.srcDir generateModConstants
+neoForge.ideSyncTask generateModConstants
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation

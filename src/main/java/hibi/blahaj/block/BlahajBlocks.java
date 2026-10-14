@@ -1,6 +1,5 @@
 package hibi.blahaj.block;
 
-import net.minecraft.client.renderer.*;
 import net.minecraft.resources.*;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
@@ -37,7 +36,6 @@ public class BlahajBlocks {
 		"demi_r", "demi_s", "enby", "gay", "genderfluid", "genderqueer", "greyrose",
 		"grey_r", "grey_s", "intersex", "lesbian", "pan", "poly", "pride", "trans");
 
-	public static List<Block> PRIDE_BLOCKS = new ArrayList<>();
 	public static List<Item> PRIDE_ITEMS = new ArrayList<>();
 
 	public static void register(IEventBus modEventBus) {
@@ -58,11 +56,7 @@ public class BlahajBlocks {
 
 		for (String name : PRIDE_NAMES) {
 			ResourceLocation id = ResourceLocation.fromNamespaceAndPath(MOD_ID, name + "_shark");
-			DeferredBlock<Block> block = BLOCKS.register(id.getPath(), () -> {
-				Block prideBlock = new CuddlyBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL));
-				PRIDE_BLOCKS.add(prideBlock);
-				return prideBlock;
-			});
+			DeferredBlock<Block> block = BLOCKS.register(id.getPath(), () -> new CuddlyBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL)));
 			ITEMS.register(id.getPath(), () -> {
 				Item prideItem = new CuddlyItem(block.get(), new Item.Properties().stacksTo(1).attributes(CuddlyItem.createAttributeModifiers()), "block.blahaj.blue_shark.tooltip");
 				PRIDE_ITEMS.add(prideItem);
@@ -86,17 +80,6 @@ public class BlahajBlocks {
 				event.accept(new ItemStack(item));
 			}
 		});
-	}
-
-	public static void registerClient() {
-		ItemBlockRenderTypes.setRenderLayer(GRAY_SHARK_BLOCK, RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(BLAHAJ_BLOCK, RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(BLAVINGAD_BLOCK, RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(BREAD_BLOCK, RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(BROWN_BEAR_BLOCK, RenderType.cutout());
-		for (Block block : PRIDE_BLOCKS) {
-			ItemBlockRenderTypes.setRenderLayer(block, RenderType.cutout());
-		}
 	}
 
 }
