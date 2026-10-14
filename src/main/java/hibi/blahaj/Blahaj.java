@@ -13,6 +13,7 @@ import net.neoforged.neoforge.common.*;
 import net.neoforged.neoforge.event.*;
 import net.neoforged.neoforge.event.village.*;
 
+@SuppressWarnings("null")
 @Mod(Blahaj.MOD_ID)
 public class Blahaj {
 

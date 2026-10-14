@@ -16,6 +16,7 @@ import org.jetbrains.annotations.*;
 
 import java.util.*;
 
+@SuppressWarnings("null")
 public class CuddlyItem extends BlockItem {
 
 	private final Component subtitle;

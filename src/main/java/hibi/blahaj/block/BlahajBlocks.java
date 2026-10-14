@@ -8,11 +8,10 @@ import net.minecraft.world.level.block.state.*;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.event.*;
 import net.neoforged.neoforge.registries.*;
-
 import java.util.*;
-
 import static hibi.blahaj.Blahaj.*;
 
+@SuppressWarnings("null")
 public class BlahajBlocks {
 
 	public static final ResourceLocation GRAY_SHARK_ID = ResourceLocation.fromNamespaceAndPath(MOD_ID, "gray_shark");
@@ -20,11 +19,8 @@ public class BlahajBlocks {
 	public static final ResourceLocation BLAVINGAD_ID = ResourceLocation.fromNamespaceAndPath(MOD_ID, "blue_whale");
 	public static final ResourceLocation BREAD_ID = ResourceLocation.fromNamespaceAndPath(MOD_ID, "bread");
 	public static final ResourceLocation BROWN_BEAR_ID = ResourceLocation.fromNamespaceAndPath(MOD_ID, "brown_bear");
-
-	/** NeoForge freezes the built-in registries before mod constructors run, so all entries are registered through DeferredRegisters. */
 	public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MOD_ID);
 	public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MOD_ID);
-
 	public static Block GRAY_SHARK_BLOCK;
 	public static Item GRAY_SHARK_ITEM;
 	public static Block BLAHAJ_BLOCK;
